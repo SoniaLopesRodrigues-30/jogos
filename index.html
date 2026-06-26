@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Batalha Naval Quiz Oficial</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>Batalha Naval Quiz 👥</h1>
+        
+        <div class="hud">
+    <div class="player-info p1 active" id="p1-panel">
+        <h3>Jogador 1 (Azul)</h3>
+        <p>Pontos: <span id="p1-score">0</span> pts</p>
+    </div>
+    <div class="player-info p2" id="p2-panel">
+        <h3>Jogador 2 (Laranja)</h3>
+        <p>Pontos: <span id="p2-score">0</span> pts</p>
+    </div>
+    <!-- Coloque onde preferir que o botão apareça na página -->
+<button id="reset-btn" class="btn-reiniciar" onclick="resetGame()">Reiniciar Jogo</button>
+
+</div>
+
+        <!-- Tabuleiro Expandido 10x10 -->
+        <div class="board-wrapper">
+            <div class="coordinates-row">
+                <div class="coord-label"></div>
+                <div class="coord-label">A</div><div class="coord-label">B</div>
+                <div class="coord-label">C</div><div class="coord-label">D</div>
+                <div class="coord-label">E</div><div class="coord-label">F</div>                
+            </div>
+            <div class="board-main">
+                <div class="coordinates-col">
+                    <div class="coord-label">1</div><div class="coord-label">2</div>
+                    <div class="coord-label">3</div><div class="coord-label">4</div>
+                    <div class="coord-label">5</div><div class="coord-label">6</div>
+                    
+                </div>
+                <div class="grid" id="grid"></div>
+            </div>
+        </div>
+
+        <div id="quiz-modal" class="modal hidden">
+            <div class="modal-content">
+                <h2 id="turn-announcer">Vez do Jogador</h2>
+                <h3 id="question-text">Pergunta</h3>
+                <div id="options-container"></div>
+            </div>
+        </div>
+    </div>
+    <script src="./js/script.js"></script>
+</body>
+</html>
