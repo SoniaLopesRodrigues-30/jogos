@@ -122,3 +122,52 @@ body {
 .btn-reiniciar:active {
     transform: scale(0.98);
 }
+
+/* Estilo da caixa da legenda */
+.legenda-container {
+    background: #15222e;
+    border: 1px solid #2c3e50;
+    border-radius: 8px;
+    padding: 15px;
+    margin: 20px auto;
+    max-width: 395px;
+    text-align: left;
+}
+
+.legenda-container h3 {
+    font-size: 1rem;
+    color: #6272a4;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Organização dos itens em duas colunas */
+.legenda-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.legenda-item {
+    display: flex;
+    align-items: center;
+    font-size: 0.85rem;
+    color: #ffffff;
+}
+
+/* Quadradinhos coloridos da legenda utilizando suas cores oficiais */
+.cor-box {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+    margin-right: 8px;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.cor-box.vermelho { background-color: #e74c3c; }
+.cor-box.verde { background-color: #2ecc71; }
+.cor-box.amarelo { background-color: #f1c40f; }
+.cor-box.roxo { background-color: #9b59b6; }
+.cor-box.ciano { background-color: #1abc9c; }
+.cor-box.azul-claro { background-color: #add8e6; }
