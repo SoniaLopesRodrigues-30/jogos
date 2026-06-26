@@ -70,7 +70,20 @@ const perguntasEspiritismo = [
     { q: "O que é o passe na prática espírita?", options: ["Uma transfusão de fluidos e energias espirituais", "Um ritual de purificação com água benta", "Um exame para testar a mediunidade", "Uma prece silenciosa individual"], answer: 0 },
     { q: "Como o Espiritismo enxerga a perda das pessoas amadas pela morte física?", options: ["Como uma separação eterna e dolorosa", "Como uma separação temporária, pois a alma continua viva", "Como o fim definitivo de qualquer laço de afeto", "Como um castigo pelas faltas cometidas"], answer: 1 },
     { q: "Qual médium brasileiro psicografou mais de 450 livros e doou todos os direitos autorais?", options: ["Divaldo Franco", "Chico Xavier", "Zíbia Gasparetto", "Yvonne do Amaral Pereira"], answer: 1 },
-    { q: "Qual é o título do primeiro livro ditado pelo espírito André Luiz a Chico Xavier em 1944?", options: ["Nosso Lar", "Os Mensageiros", "Missionários da Luz", "Evolução em Dois Mundos"], answer: 0 }
+    { q: "Qual é o título do primeiro livro ditado pelo espírito André Luiz a Chico Xavier em 1944?", options: ["Nosso Lar", "Os Mensageiros", "Missionários da Luz", "Evolução em Dois Mundos"], answer: 0 },
+
+    // --- Perguntas ( Mediunidade) ---
+    { q: "Qual livro da Codificação Espírita é considerado o guia teórico e prático da mediunidade?", options: ["O Livro dos Espíritos", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
+    { q: "Como o Espiritismo define a mediunidade?", options: ["Um dom sobrenatural e milagroso", "Uma faculdade orgânica e natural do ser humano", "Um privilégio concedido apenas a santos", "Uma doença psicológica grave"], answer: 1 },
+    { q: "Qual o nome dado ao médium que serve de canal para que os espíritos escrevam?", options: ["Médium de efeitos físicos", "Médium psicógrafo", "Médium audiente", "Médium vidente"], answer: 1 },
+    { q: "O que caracteriza os chamados 'médiuns de efeitos físicos'?", options: ["Sua capacidade de transmitir mensagens filosóficas por escrito", "Sua habilidade de produzir fenômenos materiais, como ruídos e movimentos de objetos", "Sua facilidade em curar doenças do corpo", "A capacidade de ver os espíritos claramente"], answer: 1 },
+    { q: "Segundo Kardec, qual é o principal objetivo do desenvolvimento da mediunidade?", options: ["Adivinhar o futuro e ganhar dinheiro", "Servir à própria vaidade e orgulho", "O melhoramento moral do próprio médium e o auxílio ao próximo", "Descobrir tesouros escondidos"], answer: 2 },
+    { q: "O que é a 'psicofonia' na fenomenologia espírita?", options: ["A faculdade pela qual o espírito fala através do órgão vocal do médium", "O ato de ouvir a voz direta dos espíritos no ambiente", "A transmissão de pensamentos de uma pessoa viva para outra", "A escrita mecânica dos espíritos"], answer: 0 },
+    { q: "Como a Doutrina Espírita orienta que deve ser cobrado o trabalho mediúnico?", options: ["Deve ser cobrado um valor justo para sustentar o médium", "A mediunidade deve ser exercida gratuitamente, pois é um dom gratuito de Deus", "Pode ser cobrado apenas se for para caridade", "Deve ser cobrado apenas de pessoas ricas"], answer: 1 },
+    { q: "Qual é o principal fator que atrai os Bons Espíritos para uma reunião mediúnica?", options: ["O luxo e a decoração do ambiente físico", "A quantidade exata de pessoas presentes", "A seriedade, a harmonia moral e as boas intenções dos participantes", "A realização de rituais com velas e incensos"], answer: 2 },
+    { q: "O que é a 'vidência' no contexto mediúnico?", options: ["A capacidade de adivinhar o futuro das pessoas", "A faculdade de ver os Espíritos com os olhos da alma", "A habilidade de ler pensamentos ocultos", "O dom de curar através do olhar"], answer: 1 },
+    { q: "Qual a melhor maneira recomendada por Kardec para identificar o valor de uma comunicação espiritual?", options: ["Pelo nome famoso que o Espírito assina", "Pela beleza da caligrafia do médium", "Pela análise lógica, moral e racional do conteúdo da mensagem", "Pelo número de páginas escritas"], answer: 2 }
+
 ];
 
 let perguntasSorteadas = [];
