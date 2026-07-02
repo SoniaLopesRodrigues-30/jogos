@@ -4,10 +4,10 @@ const totalShipSquares = 12;
 
 // Tabela de pontos por tipo de alvo (Adicionado as Pedras)
 const pointsTable = {
-    carrier: 50,     // Porta-Aviões
-    battleship: 40,  // Encouraçado
-    destroyer: 30,   // Contratorpedeiro
-    submarine: 30,   // Submarino
+    carrier: 50,     // Livro dos Espíritos
+    battleship: 40,  // Evangelho Segundo o Espiritismo
+    destroyer: 30,   // O Livro dos Médiuns
+    submarine: 30,   // o Céu e o Inferno
     patrol: 20,      // Navio de Patrulha
     rock: 20,        // NOVO: Almas Pedras (Pontos grátis para o MAL)
     water: 10        // Água
@@ -221,7 +221,7 @@ function checkAnswer(selected, correct) {
 }
 
 function translateShip(type) {
-    const names = { carrier: "Porta-Aviões", battleship: "Encouraçado", destroyer: "Contratorpedeiro", submarine: "Submarino", patrol: "Navio de Patrulha" };
+    const names = { carrier: "O Livro dos Espíritos", battleship: "O Evangelho Segundo o Espiritismo", destroyer: "O Livro dos Médiuns", submarine: "O Céu e o Inferno", patrol: "A Gênese" };
     return names[type] || "Navio";
 }
 
@@ -262,7 +262,7 @@ function resetGame() {
     }
 
     modal.classList.add('hidden');
-    alert("O oceano foi redefinido! Nova jornada contra o MAL iniciada.");
+    alert("Nova Reencarnação definida! Nova jornada contra o MAL iniciada.");
     createGameBoard();
 }
 
