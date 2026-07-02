@@ -1,250 +1,407 @@
-/* --- RESET E ESTILOS GERAIS --- */
+/* ==========================================================================
+   IMPORTAÇÕES E VARIÁVEIS CYBER-SPIRITUAL
+   ========================================================================== */
+@import url('https://googleapis.com');
+
+:root {
+    --bg-dark: #060814;
+    --bg-gradient: linear-gradient(135deg, #060814 0%, #0b0f26 40%, #1a0b2e 100%);
+    --panel-glow-bem: rgba(0, 242, 254, 0.15);
+    --panel-glow-mal: rgba(255, 0, 127, 0.15);
+    --glass-bg: rgba(11, 15, 38, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.05);
+    
+    /* Cores de Neon Gamer de Alta Intensidade */
+    --color-bem: #00f2fe;        /* Ciano Elétrico */
+    --color-mal: #ff007f;        /* Rosa Choque Néon */
+    --color-water: #111633;      /* Azul Abismo Profundo */
+    --color-rock: #4e5d78;       /* Cinza Cósmico */
+    
+    /* Cores dos Livros Baseadas em Cristais e Energia */
+    --color-carrier: #ff3838;    /* Rubi */
+    --color-battleship: #05dfd7; /* Turquesa */
+    --color-destroyer: #ffb8b8;  /* Quartzo Rosa */
+    --color-whatis: #f368e0;     /* Ametista Brilhante */
+    --color-patrol: #feca57;     /* Topázio */
+    --color-submarine: #ff9f43;  /* Âmbar */
+}
+
+/* Reset e Estilização Base */
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Arial, sans-serif;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
 }
 
 body {
-    background-color: #0f171e;
-    color: #ffffff;
+    background: var(--bg-gradient);
+    color: #f8fafc;
+    min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 15px;
+    padding: 24px;
+    overflow-x: hidden;
 }
 
+/* Container Principal do Jogo (Efeito Arena) */
 .game-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 28px;
+    padding: 35px;
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
+    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    text-align: center;
 }
 
 h1 {
-    margin-bottom: 15px;
-    font-size: 2rem;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    background: linear-gradient(90deg, var(--color-bem), #9b51e0, var(--color-mal));
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: textShine 4s linear infinite;
 }
 
-/* --- HUD E PAINÉIS DOS JOGADORES --- */
+@keyframes textShine {
+    to { background-position: 200% center; }
+}
+
+/* ==========================================================================
+   HUD INTERFACES DE STATUS (Estilo Placar de Esports)
+   ========================================================================== */
 .hud {
     display: flex;
-    gap: 15px;
-    margin-bottom: 15px;
-    width: 100%;
-    max-width: 385px;
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
 .player-info {
     flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    background: #15222e;
-    border: 3px solid transparent;
-    transition: all 0.3s;
-    opacity: 0.4;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    border-radius: 20px;
+    padding: 18px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    opacity: 0.3;
+    transform: scale(0.95);
+    position: relative;
+    overflow: hidden;
 }
 
-#p1-panel.active { 
-    border-color: #3498db; 
-    opacity: 1; 
-    box-shadow: 0 0 10px rgba(52, 152, 219, 0.4); 
-}
-#p2-panel.active { 
-    border-color: #e67e22; 
-    opacity: 1; 
-    box-shadow: 0 0 10px rgba(230, 126, 34, 0.4); 
+.player-info::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 3px;
+    background: transparent;
 }
 
-.player-info h3 { font-size: 0.95rem; margin-bottom: 4px; }
-.player-info p { font-size: 1.1rem; font-weight: bold; }
-
-/* --- NOVO TABULEIRO INTELIGENTE AUTO-ALINHADO --- */
-.board-wrapper { 
-    display: flex; 
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    margin: 15px 0;
+.player-info h3 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    color: #64748b;
 }
 
-/* 7 colunas e linhas: 1 para o índice (35px) + 6 para o jogo (50px cada) */
+.player-info p {
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+/* Estado Ativo do BEM (Efeito Neon Ciano) */
+.player-info.p1.active {
+    opacity: 1;
+    transform: scale(1.05);
+    background: var(--panel-glow-bem);
+    border-color: rgba(0, 242, 254, 0.4);
+    box-shadow: 0 0 30px rgba(0, 242, 254, 0.25),
+                inset 0 0 15px rgba(0, 242, 254, 0.1);
+}
+.player-info.p1.active::before { background: var(--color-bem); }
+.player-info.p1.active h3 { color: var(--color-bem); }
+.player-info.p1.active p { color: #ffffff; text-shadow: 0 0 10px rgba(0, 242, 254, 0.5); }
+
+/* Estado Ativo do MAL (Efeito Neon Cyberpunk) */
+.player-info.p2.active {
+    opacity: 1;
+    transform: scale(1.05);
+    background: var(--panel-glow-mal);
+    border-color: rgba(255, 0, 127, 0.4);
+    box-shadow: 0 0 30px rgba(255, 0, 127, 0.25),
+                inset 0 0 15px rgba(255, 0, 127, 0.1);
+}
+.player-info.p2.active::before { background: var(--color-mal); }
+.player-info.p2.active h3 { color: var(--color-mal); }
+.player-info.p2.active p { color: #ffffff; text-shadow: 0 0 10px rgba(255, 0, 127, 0.5); }
+
+/* Botão Reiniciar Estilo Cyber-Action */
+.btn-reiniciar {
+    background: transparent;
+    color: #ffffff;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    border-radius: 14px;
+    padding: 14px 28px;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-bottom: 30px;
+}
+
+.btn-reiniciar:hover {
+    border-color: #ffffff;
+    background: #ffffff;
+    color: var(--bg-dark);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+/* ==========================================================================
+   TABULEIRO / GRID TECH DE CÉLULAS (Otimizado para 7x7)
+   ========================================================================== */
+.board-wrapper {
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 24px;
+    padding: 20px;
+    margin-bottom: 35px;
+    border: 1px solid rgba(255, 255, 255, 0.02);
+}
+
 #grid {
     display: grid;
-    grid-template-columns: 35px repeat(6, 50px);
-    grid-template-rows: 35px repeat(6, 50px);
-    gap: 5px;
+    /* 8 colunas (1 para os números + 7 para as letras A até G) */
+    grid-template-columns: repeat(8, 1fr);
+    gap: 8px;
 }
 
-/* Estilo para as letras e números das coordenadas */
-.coord-label { 
-    font-weight: bold; 
-    color: #6272a4; 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    font-size: 0.9rem;
-    user-select: none;
-}
-
-/* Configuração de cada quadrado do mar */
-.cell {
-    width: 50px;
-    height: 50px;
-    background-color: #25425c;
-    border: 1px solid #15222e;
-    border-radius: 4px;
-    cursor: pointer;
+/* Rótulos de Linha e Coluna (Coordenadas) */
+.coord-label {
+    font-family: 'Orbitron', sans-serif;
     display: flex;
-    align-items: center;
     justify-content: center;
-    font-size: 0.75rem;
-    font-weight: bold;
-    color: rgba(255, 255, 255, 0.2); /* Coordenada interna muito sutil */
-    transition: transform 0.1s, background-color 0.2s;
+    align-items: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #475569;
+    user-select: none;
+    height: 52px;
+}
+
+/* Células Clássicas do Grid Sci-fi */
+.cell {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+    color: #334155;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 700;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    height: 52px;
 }
 
 .cell:hover:not(.disabled) {
-    background-color: #2c3e50;
-    transform: scale(1.05);
-    color: rgba(255, 255, 255, 0.7);
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.4);
 }
 
-/* Cores Oficiais da Frota Revelada */
-.cell.ship-carrier { background-color: #e74c3c !important; color: #ffffff !important; }
-.cell.ship-battleship { background-color: #2ecc71 !important; color: #ffffff !important; }
-.cell.ship-destroyer { background-color: #f1c40f !important; color: #000000 !important; }
-.cell.ship-submarine { background-color: #9b59b6 !important; color: #ffffff !important; }
-.cell.ship-patrol { background-color: #1abc9c !important; color: #000000 !important; }
-
-/* Tiro na Água solicitado */
-.cell.water {
-    background-color: #add8e6 !important;
-    color: #2c3e50 !important;
+/* Estados Pós-Ataque/Marcados */
+.cell.disabled {
+    cursor: not-allowed;
+    color: #ffffff;
+    font-weight: 800;
 }
 
-/* Indicadores de Conquista por Jogador */
-.cell.claimed-p1 { border: 2px solid #3498db !important; }
-.cell.claimed-p2 { border: 2px solid #e67e22 !important; }
-.cell.disabled { cursor: not-allowed; pointer-events: none; }
-
-/* --- BOTÕES E COMPONENTES DE INTERFACE --- */
-.btn-reiniciar {
-    background-color: #bdc3c7;
-    color: #2c3e50;
-    border: none;
-    padding: 10px 20px;
-    font-size: 15px;
-    font-weight: bold;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-bottom: 10px;
-    transition: background 0.3s, transform 0.1s;
+/* Bordas dinâmicas brilhantes baseadas nas marcas de pontos */
+.cell.claimed-p1 { 
+    border: 2px solid var(--color-bem) !important; 
+    box-shadow: inset 0 0 10px rgba(0, 242, 254, 0.2); 
+}
+.cell.claimed-p2 { 
+    border: 2px solid var(--color-mal) !important; 
+    box-shadow: inset 0 0 10px rgba(255, 0, 127, 0.2); 
 }
 
-.btn-reiniciar:hover { background-color: #95a5a6; color: white; }
-.btn-reiniciar:active { transform: scale(0.98); }
+/* Cores de Alvos Explosivos Revelados */
+.cell.water { background-color: var(--color-water) !important; color: #1e293b !important; }
+.cell.ship-rock { background-color: var(--color-rock) !important; }
+.cell.ship-carrier { background-color: var(--color-carrier) !important; box-shadow: 0 0 15px rgba(255, 56, 56, 0.4); }
+.cell.ship-battleship { background-color: var(--color-battleship) !important; box-shadow: 0 0 15px rgba(5, 223, 215, 0.4); }
+.cell.ship-destroyer { background-color: var(--color-destroyer) !important; box-shadow: 0 0 15px rgba(255, 184, 184, 0.4); }
+.cell.ship-whatis { background-color: var(--color-whatis) !important; box-shadow: 0 0 15px rgba(243, 104, 224, 0.4); }
+.cell.ship-patrol { background-color: var(--color-patrol) !important; box-shadow: 0 0 15px rgba(254, 202, 87, 0.4); }
+.cell.ship-submarine { background-color: var(--color-submarine) !important; box-shadow: 0 0 15px rgba(255, 159, 67, 0.4); }
 
+/* Mensagem de busca vazia */
+.sem-vendas {
+    color: #64748b;
+    padding: 20px;
+    font-style: italic;
+}
+
+/* ==========================================================================
+   PAINEL DE LEGENDA DO GRID
+   ========================================================================== */
 .legenda-container {
-    background: #15222e;
-    border: 1px solid #2c3e50;
-    border-radius: 8px;
-    padding: 12px;
-    width: 100%;
-    max-width: 385px;
+    background: rgba(255, 255, 255, 0.01);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    border-radius: 20px;
+    padding: 22px;
     text-align: left;
-    margin-top: 10px;
 }
 
 .legenda-container h3 {
-    font-size: 0.9rem;
-    color: #6272a4;
-    margin-bottom: 8px;
-    text-align: center;
+    font-family: 'Orbitron', sans-serif;
+    font-size: 0.95rem;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #475569;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding-bottom: 10px;
 }
 
 .legenda-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
 }
 
 .legenda-item {
     display: flex;
     align-items: center;
-    font-size: 0.8rem;
-    color: #ffffff;
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 600;
 }
 
 .cor-box {
-    width: 14px;
-    height: 14px;
-    border-radius: 3px;
-    margin-right: 8px;
+    width: 12px;
+    height: 12px;
+    border-radius: 4px;
+    margin-right: 12px;
     display: inline-block;
     flex-shrink: 0;
 }
 
-.cor-box.vermelho { background-color: #e74c3c; }
-.cor-box.verde { background-color: #2ecc71; }
-.cor-box.amarelo { background-color: #f1c40f; }
-.cor-box.roxo { background-color: #9b59b6; }
-.cor-box.ciano { background-color: #1abc9c; }
-.cor-box.azul-claro { background-color: #add8e6; }
+.cor-box.vermelho { background-color: var(--color-carrier); }
+.cor-box.verde { background-color: var(--color-battleship); }
+.cor-box.amarelo { background-color: var(--color-destroyer); }
+.cor-box.roxo { background-color: var(--color-patrol); }
+.cor-box.ciano { background-color: var(--color-submarine); }
+.cor-box.azul-claro { background-color: var(--color-water); }
 
-/* --- MODAL DO QUIZ --- */
-.modal { 
-    position: fixed; 
-    top: 0; 
-    left: 0; 
-    width: 100%; 
-    height: 100%; 
-    background: rgba(0,0,0,0.85); 
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    z-index: 10; 
+/* ==========================================================================
+   JANELA DO QUIZ (MODAL ESTILO INTERFACE POP-UP)
+   ========================================================================== */
+.modal {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(4, 5, 13, 0.9);
+    backdrop-filter: blur(12px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
 }
 
-.modal-content { 
-    background: #15222e; 
-    padding: 25px; 
-    border-radius: 12px; 
-    width: 90%; 
-    max-width: 400px; 
-    text-align: center; 
-    border: 1px solid #2c3e50; 
+.modal.hidden {
+    display: none !important;
 }
 
-#turn-announcer { font-size: 1.3rem; margin-bottom: 10px; color: #fff; }
-#question-text { font-size: 1rem; color: #cbd5e0; margin-bottom: 15px; }
-#options-container { display: flex; flex-direction: column; gap: 10px; }
-
-.option-btn { 
-    padding: 12px; 
-    background: #1f2f3d; 
-    color: white; 
-    border: 1px solid #2c3e50; 
-    border-radius: 6px; 
-    cursor: pointer; 
-    text-align: left; 
-    font-size: 0.9rem;
-    transition: background 0.2s;
+.modal-content {
+    background: #0f1224;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 35px;
+    width: 90%;
+    max-width: 580px;
+    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.8),
+                0 0 60px rgba(155, 81, 224, 0.1);
+    animation: modalSlide 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.option-btn:hover { background: #2c3e50; }
-.hidden { display: none !important; }
-
-/* Estilo visual para as Almas Pedras quando reveladas */
-.cell.claimed-p2[data-row="1"][data-col="5"],
-.cell.claimed-p2[data-row="3"][data-col="0"],
-.cell.claimed-p2[data-row="4"][data-col="5"],
-.cell.claimed-p2[data-row="5"][data-col="1"] {
-    background-color: #7f8c8d !important; /* Cor cinza de pedra */
-    color: #ffffff !important;
+@keyframes modalSlide {
+    from { transform: scale(0.92) translateY(30px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
 }
 
+#turn-announcer {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 900;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+#question-text {
+    font-size: 1.15rem;
+    line-height: 1.6;
+    font-weight: 600;
+    color: #e2e8f0;
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+/* Container de Alternativas Gamer (Cards com efeito Hover Deslizante) */
+#options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.option-btn {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 14px;
+    padding: 16px 22px;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.215, 0.610, 0.355, 1);
+}
+
+.option-btn:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    transform: translateX(6px);
+    box-shadow: -4px 0 0 var(--color-bem); /* Linha indicadora lateral ciano */
+}
+
+/* Ajuste sutil quando o modal for aberto pelo time do MAL (Muda a linha lateral para rosa) */
+#quiz-modal:has(#turn-announcer[style*="rgb(255, 51, 102)"]) .option-btn:hover,
+#quiz-modal:has(#turn-announcer[style*="#ff3366"]) .option-btn:hover {
+    box-shadow: -4px 0 0 var(--color-mal);
+}
+
+.option-btn:active {
+    transform: translateX(3px) scale(0.99);
+}
