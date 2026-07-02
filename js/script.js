@@ -1,3 +1,4 @@
+// --- PARTE 1: ESCOPO GLOBAL E CONFIGURAÇÕES ---
 const columnsLetters = ["A", "B", "C", "D", "E", "F"];
 const totalShipSquares = 12;
 
@@ -11,8 +12,14 @@ const pointsTable = {
     water: 10        // Acertou a pergunta mas pegou água
 };
 
-// Contador interno para saber quando o jogo acaba (máximo 12 pedaços)
+// Controle de estado do jogo
 let discoveredShipSquares = 0; 
+let currentPlayer = 1;
+let p1Score = 0; 
+let p2Score = 0; 
+let currentCell = null;
+let currentQuestion = null;
+let perguntasSorteadas = [];
 
 // Mapa 6x6 totalmente preenchido com 6 colunas em todas as linhas
 const shipMap = [
@@ -24,33 +31,25 @@ const shipMap = [
     [0, 0, 0, 0, 0, 0]
 ];
 
-let currentPlayer = 1;
-let p1Score = 0; // Pontuação numérica do Jogador 1
-let p2Score = 0; // Pontuação numérica do Jogador 2
-let currentCell = null;
-let currentQuestion = null;
-
+// Elementos do DOM
 const gridElement = document.getElementById('grid');
 const modal = document.getElementById('quiz-modal');
 const turnAnnouncer = document.getElementById('turn-announcer');
 const questionText = document.getElementById('question-text');
 const optionsContainer = document.getElementById('options-container');
 
-// Banco de dados corrigido e finalizado com perguntas sobre o Espiritismo
+// Banco de dados de perguntas sobre o Espiritismo
 const perguntasEspiritismo = [
-    // --- 10 Perguntas Iniciais ---
     { q: "Quem foi o codificador da Doutrina Espírita?", options: ["Chico Xavier", "Allan Kardec", "Léon Denis", "Emmanuel"], answer: 1 },
     { q: "Qual foi a primeira obra da Codificação Espírita, lançada em 1857?", options: ["O Livro dos Médiuns", "O Evangelho segundo o Espiritismo", "O Livro dos Espíritos", "A Gênese"], answer: 2 },
     { q: "Qual era o nome real de Allan Kardec?", options: ["Hippolyte Léon Denizard Rivail", "Léon Denis", "Gabriel Delanne", "Amélie Boudet"], answer: 0 },
     { q: "Quantas obras principais formam a Codificação Espírita?", options: ["3 obras", "4 obras", "5 obras", "6 obras"], answer: 2 },
     { q: "Qual livro da codificação explica as leis morais e a vida espiritual?", options: ["O Livro dos Espíritos", "O Livro dos Médiuns", "O Céu e o Inferno", "A Gênese"], answer: 0 },
-    { q: "Qual obra aborda a mediunidade e a comunicação com o mundo invisível?", options: ["O Evangelho segundo o Espiritismo", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
+    { q: "Qual obra aborda a mediunidade e a comunicação com o world invisível?", options: ["O Evangelho segundo o Espiritismo", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
     { q: "Segundo o Espiritismo, qual é o objetivo principal da reencarnação?", options: ["Punição eterna", "Evolução moral e intelectual", "Esquecer o passado", "Apenas viver na Terra"], answer: 1 },
     { q: "Qual livro aborda a justiça divina, as penas e os gozos futuros?", options: ["O Livro dos Espíritos", "A Gênese", "O Céu e o Inferno", "O Livro dos Médiuns"], answer: 2 },
     { q: "Qual é o nome do laço fluídico que une o corpo físico ao perispírito?", options: ["Cordão de prata", "Fluido vital", "Duplo etérico", "Laço magnético"], answer: 0 },
     { q: "A quem os espíritas consideram o maior modelo e guia para a humanidade?", options: ["Allan Kardec", "Jesus", "Chico Xavier", "Anjo da Guarda"], answer: 1 },
-
-    // --- Novas Perguntas (Conceitos Gerais e Doutrina) ---
     { q: "Em qual categoria de mundos a Terra se encontra atualmente segundo a escala evolutiva?", options: ["Mundo Primitivo", "Mundo de Provas e Expiações", "Mundo de Regeneração", "Mundo Feliz"], answer: 1 },
     { q: "Qual o nome do princípio universal do qual derivam todas as formas de matéria no universo?", options: ["Fluido Cósmico Universal", "Energia Escura", "Matéria Ectoplásmica", "Fluido Espiritual"], answer: 0 },
     { q: "Qual é o nome do envoltório semimaterial que serve de ligação entre o Espírito e o corpo?", options: ["Corpo Astral", "Perispírito", "Alma", "Duplo Vital"], answer: 1 },
@@ -61,9 +60,7 @@ const perguntasEspiritismo = [
     { q: "O que determina a rapidez da evolução de um Espírito?", options: ["A vontade divina e o destino", "O tempo absoluto de sua criação", "Seus próprios esforços e livre-arbítrio", "O número exato de reencarnações"], answer: 2 },
     { q: "Na escala espírita, quais são as três ordens principais de Espíritos?", options: ["Anjos, Demônios e Humanos", "Imperfeitos, Bons Espíritos e Puros Espíritos", "Terrenos, Astrais e Divinos", "Evoluídos, Estagnados e Regressivos"], answer: 1 },
     { q: "Qual livro da Codificação analisa os milagres e as predições segundo as leis da natureza?", options: ["O Livro dos Espíritos", "O Evangelho segundo o Espiritismo", "A Gênese", "O Céu e o Inferno"], answer: 2 },
-
-    // --- Novas Perguntas (História, Prática e Obras Complementares) ---
-    { q: "Onde começaram as manifestações que deram origem às investigações de Kardec?", options: ["Nas mesas girantes in Paris", "Em reuniões mediúnicas no Brasil", "Em monastérios no Tibete", "Em templos religiosos na Inglaterra"], answer: 0 },
+    { q: "Onde começaram as manifestações que deram origem às investigações de Kardec?", options: ["Nas mesas girantes em Paris", "Em reuniões mediúnicas no Brasil", "Em monastérios no Tibete", "Em templos religiosos na Inglaterra"], answer: 0 },
     { q: "Quem foi a fiel esposa e colaboradora direta de Allan Kardec?", options: ["Amélie-Gabrielle Boudet", "Marie Curie", "Hermance Dufaux", "Delphine de Girardin"], answer: 0 },
     { q: "Quem escreveu o clássico livro 'Depois da Morte', sendo considerado o consolidador do Espiritismo?", options: ["Chico Xavier", "Léon Denis", "Gabriel Delanne", "Camille Flammarion"], answer: 1 },
     { q: "Qual o nome da revista mensal fundada e editada por Allan Kardec a partir de 1858?", options: ["Revista de Estudos Psíquicos", "O Clarim Espírita", "Revista Espírita", "O Reformador"], answer: 2 },
@@ -71,55 +68,15 @@ const perguntasEspiritismo = [
     { q: "Como o Espiritismo enxerga a perda das pessoas amadas pela morte física?", options: ["Como uma separação eterna e dolorosa", "Como uma separação temporária, pois a alma continua viva", "Como o fim definitivo de qualquer laço de afeto", "Como um castigo pelas faltas cometidas"], answer: 1 },
     { q: "Qual médium brasileiro psicografou mais de 450 livros e doou todos os direitos autorais?", options: ["Divaldo Franco", "Chico Xavier", "Zíbia Gasparetto", "Yvonne do Amaral Pereira"], answer: 1 },
     { q: "Qual é o título do primeiro livro ditado pelo espírito André Luiz a Chico Xavier em 1944?", options: ["Nosso Lar", "Os Mensageiros", "Missionários da Luz", "Evolução em Dois Mundos"], answer: 0 },
-
-    // --- Perguntas ( Mediunidade) ---
     { q: "Qual livro da Codificação Espírita é considerado o guia teórico e prático da mediunidade?", options: ["O Livro dos Espíritos", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
     { q: "Como o Espiritismo define a mediunidade?", options: ["Um dom sobrenatural e milagroso", "Uma faculdade orgânica e natural do ser humano", "Um privilégio concedido apenas a santos", "Uma doença psicológica grave"], answer: 1 },
-    { q: "Qual o nome dado ao médium que serve de canal para que os espíritos escrevam?", options: ["Médium de efeitos físicos", "Médium psicógrafo", "Médium audiente", "Médium vidente"], answer: 1 },
-    { q: "O que caracteriza os chamados 'médiuns de efeitos físicos'?", options: ["Sua capacidade de transmitir mensagens filosóficas por escrito", "Sua habilidade de produzir fenômenos materiais, como ruídos e movimentos de objetos", "Sua facilidade em curar doenças do corpo", "A capacidade de ver os espíritos claramente"], answer: 1 },
-    { q: "Segundo Kardec, qual é o principal objetivo do desenvolvimento da mediunidade?", options: ["Adivinhar o futuro e ganhar dinheiro", "Servir à própria vaidade e orgulho", "O melhoramento moral do próprio médium e o auxílio ao próximo", "Descobrir tesouros escondidos"], answer: 2 },
-    { q: "O que é a 'psicofonia' na fenomenologia espírita?", options: ["A faculdade pela qual o espírito fala através do órgão vocal do médium", "O ato de ouvir a voz direta dos espíritos no ambiente", "A transmissão de pensamentos de uma pessoa viva para outra", "A escrita mecânica dos espíritos"], answer: 0 },
-    { q: "Como a Doutrina Espírita orienta que deve ser cobrado o trabalho mediúnico?", options: ["Deve ser cobrado um valor justo para sustentar o médium", "A mediunidade deve ser exercida gratuitamente, pois é um dom gratuito de Deus", "Pode ser cobrado apenas se for para caridade", "Deve ser cobrado apenas de pessoas ricas"], answer: 1 },
-    { q: "Qual é o principal fator que atrai os Bons Espíritos para uma reunião mediúnica?", options: ["O luxo e a decoração do ambiente físico", "A quantidade exata de pessoas presentes", "A seriedade, a harmonia moral e as boas intenções dos participantes", "A realização de rituais com velas e incensos"], answer: 2 },
-    { q: "O que é a 'vidência' no contexto mediúnico?", options: ["A capacidade de adivinhar o futuro das pessoas", "A faculdade de ver os Espíritos com os olhos da alma", "A habilidade de ler pensamentos ocultos", "O dom de curar através do olhar"], answer: 1 },
-    { q: "Qual a melhor maneira recomendada por Kardec para identificar o valor de uma comunicação espiritual?", options: ["Pelo nome famoso que o Espírito assina", "Pela beleza da caligrafia do médium", "Pela análise lógica, moral e racional do conteúdo da mensagem", "Pelo número de páginas escritas"], answer: 2 }
-
+    { q: "Qual o nome dado ao médium que serve de canal para que os espíritos escrevam?", options: ["Médium de efeitos físicos", "Médium psicógrafo", "Médium audiente", "Médium vidente"], answer: 1 }
 ];
-
-let perguntasSorteadas = [];
-// --- PARTE 2: FUNÇÕES LÓGICAS E INICIALIZAÇÃO ---
-
-function createGameBoard() {
-    gridElement.innerHTML = ''; 
-    for (let r = 0; r < 6; r++) {
-        for (let c = 0; c < 6; c++) {
-            const cell = document.createElement('div');
-            cell.classList.add('cell');
-            cell.dataset.row = r;
-            cell.dataset.col = c;
-            cell.addEventListener('click', handleCellClick);
-            gridElement.appendChild(cell);
-        }
-    }
-}
-
-function handleCellClick(e) {
-    const cell = e.target;
-    if (cell.classList.contains('disabled')) return;
-    
-    currentCell = cell;
-    const row = parseInt(cell.dataset.row);
-    const col = parseInt(cell.dataset.col);
-    const coordinateName = columnsLetters[col] + (row + 1);
-
-    openQuiz(coordinateName);
-}
-
+// --- PARTE 2: LÓGICA DE EXECUÇÃO E REGRAS ---
 function generateDynamicQuestion() {
     if (perguntasSorteadas.length === perguntasEspiritismo.length) {
         perguntasSorteadas = [];
     }
-
     const disponiveis = perguntasEspiritismo.filter((_, idx) => !perguntasSorteadas.includes(idx));
     const perguntaEscolhida = disponiveis[Math.floor(Math.random() * disponiveis.length)];
     
@@ -138,11 +95,59 @@ function generateDynamicQuestion() {
     return { q: perguntaEscolhida.q, options: apenasTextos, answer: novoIndiceCorreto };
 }
 
+// CORRIGIDO: Esta função monta as letras, números e blocos do mar integrados ao novo CSS
+function createGameBoard() {
+    const grid = document.getElementById('grid');
+    if (!grid) return;
+    grid.innerHTML = ''; 
+
+    // Cria a linha superior de coordenadas (Canto vazio + Letras A-F)
+    const emptyCorner = document.createElement('div');
+    emptyCorner.classList.add('coord-label');
+    grid.appendChild(emptyCorner);
+
+    columnsLetters.forEach(letter => {
+        const label = document.createElement('div');
+        label.classList.add('coord-label');
+        label.textContent = letter;
+        grid.appendChild(label);
+    });
+
+    // Cria as linhas seguintes (Número indicador na esquerda + 6 células jogáveis)
+    for (let r = 0; r < 6; r++) {
+        const rowLabel = document.createElement('div');
+        rowLabel.classList.add('coord-label');
+        rowLabel.textContent = r + 1;
+        grid.appendChild(rowLabel);
+
+        for (let c = 0; c < 6; c++) {
+            const cell = document.createElement('div');
+            cell.classList.add('cell');
+            cell.dataset.row = r;
+            cell.dataset.col = c;
+            
+            const coordLabel = columnsLetters[c] + (r + 1);
+            cell.textContent = coordLabel;
+            
+            cell.addEventListener('click', () => {
+                if (cell.classList.contains('disabled')) return;
+                currentCell = cell;
+                openQuiz(coordLabel);
+            });
+            
+            grid.appendChild(cell);
+        }
+    }
+}
+
 function openQuiz(coordinate) {
     currentQuestion = generateDynamicQuestion();
     
-    turnAnnouncer.textContent = `Vez do Jogador ${currentPlayer}`;
-    turnAnnouncer.style.color = currentPlayer === 1 ? '#3498db' : '#e67e22';
+    const announcerInsideModal = document.getElementById('turn-announcer');
+    if (announcerInsideModal) {
+        announcerInsideModal.textContent = `Vez do Jogador ${currentPlayer}`;
+        announcerInsideModal.style.color = currentPlayer === 1 ? '#3498db' : '#e67e22';
+    }
 
     questionText.innerHTML = `<span style="color: #6272a4;">Disparo na Coordenada [${coordinate}]</span><br><br>${currentQuestion.q}`;
     optionsContainer.innerHTML = '';
@@ -205,8 +210,12 @@ function translateShip(type) {
 
 function switchPlayer() {
     currentPlayer = currentPlayer === 1 ? 2 : 1;
-    document.getElementById('p1-panel').classList.toggle('active');
-    document.getElementById('p2-panel').classList.toggle('active');
+    const p1Panel = document.getElementById('p1-panel');
+    const p2Panel = document.getElementById('p2-panel');
+    if (p1Panel && p2Panel) {
+        p1Panel.classList.toggle('active');
+        p2Panel.classList.toggle('active');
+    }
 }
 
 function checkGameEnd() {
@@ -239,24 +248,17 @@ function resetGame() {
     document.getElementById('p1-score').textContent = "0";
     document.getElementById('p2-score').textContent = "0";
     
-    document.getElementById('p1-panel').classList.add('active');
-    document.getElementById('p2-panel').classList.remove('active');
-    
-    if (turnAnnouncer) {
-        turnAnnouncer.textContent = "Vez do Jogador 1";
-        turnAnnouncer.style.color = '#3498db';
+    const p1Panel = document.getElementById('p1-panel');
+    const p2Panel = document.getElementById('p2-panel');
+    if (p1Panel && p2Panel) {
+        p1Panel.classList.add('active');
+        p2Panel.classList.remove('active');
     }
 
-    const allCells = gridElement.querySelectorAll('.cell');
-    allCells.forEach(cell => {
-        cell.className = 'cell'; 
-    });
-
     modal.classList.add('hidden');
-    
     alert("O oceano foi redefinido! Nova partida iniciada.");
     createGameBoard();
 }
 
-// Inicializa a grade 6x6 ao carregar a página
+// Inicializa a montagem correta do tabuleiro integrado ao carregar o script
 createGameBoard();

@@ -1,3 +1,4 @@
+/* --- RESET E ESTILOS GERAIS --- */
 * {
     margin: 0;
     padding: 0;
@@ -12,19 +13,30 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    padding: 10px;
+    padding: 15px;
 }
 
 .game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     width: 100%;
     max-width: 600px;
 }
 
+h1 {
+    margin-bottom: 15px;
+    font-size: 2rem;
+}
+
+/* --- HUD E PAINÉIS DOS JOGADORES --- */
 .hud {
     display: flex;
     gap: 15px;
     margin-bottom: 15px;
+    width: 100%;
+    max-width: 385px;
 }
 
 .player-info {
@@ -37,129 +49,141 @@ body {
     opacity: 0.4;
 }
 
-.player-info.active.p1 { border-color: #3498db; opacity: 1; box-shadow: 0 0 10px rgba(52, 152, 219, 0.4); }
-.player-info.active.p2 { border-color: #e67e22; opacity: 1; box-shadow: 0 0 10px rgba(230, 126, 34, 0.4); }
-
-.board-wrapper { display: flex; flex-direction: column; align-items: center; }
-
-/* CORRIGIDO: Mudado de repeat(10, 1fr) para repeat(6, 1fr) para alinhar com as 6 colunas do grid */
-.coordinates-row { display: grid; grid-template-columns: 30px repeat(6, 1fr); width: 100%; gap: 5px; margin-bottom: 4px; max-width: 395px; }
-
-.board-main { display: flex; width: 100%; gap: 4px; max-width: 395px; }
-.coordinates-col { display: flex; flex-direction: column; justify-content: space-around; width: 30px; }
-.coord-label { font-weight: bold; color: #6272a4; display: flex; justify-content: center; align-items: center; font-size: 0.9rem; }
-
-/* Tabuleiro Ajustado e Centralizado para 6x6 */
-#grid {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr); /* Mantido em 6 colunas */
-    gap: 5px; /* Espaçamento entre os quadrados */
-    flex: 1;
-    margin: 0 auto;
+#p1-panel.active { 
+    border-color: #3498db; 
+    opacity: 1; 
+    box-shadow: 0 0 10px rgba(52, 152, 219, 0.4); 
+}
+#p2-panel.active { 
+    border-color: #e67e22; 
+    opacity: 1; 
+    box-shadow: 0 0 10px rgba(230, 126, 34, 0.4); 
 }
 
+.player-info h3 { font-size: 0.95rem; margin-bottom: 4px; }
+.player-info p { font-size: 1.1rem; font-weight: bold; }
+
+/* --- NOVO TABULEIRO INTELIGENTE AUTO-ALINHADO --- */
+.board-wrapper { 
+    display: flex; 
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin: 15px 0;
+}
+
+/* 7 colunas e linhas: 1 para o índice (35px) + 6 para o jogo (50px cada) */
+#grid {
+    display: grid;
+    grid-template-columns: 35px repeat(6, 50px);
+    grid-template-rows: 35px repeat(6, 50px);
+    gap: 5px;
+}
+
+/* Estilo para as letras e números das coordenadas */
+.coord-label { 
+    font-weight: bold; 
+    color: #6272a4; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    font-size: 0.9rem;
+    user-select: none;
+}
+
+/* Configuração de cada quadrado do mar */
 .cell {
-    aspect-ratio: 1;
+    width: 50px;
+    height: 50px;
     background-color: #25425c;
     border: 1px solid #15222e;
     border-radius: 4px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    color: rgba(255, 255, 255, 0.2); /* Coordenada interna muito sutil */
     transition: transform 0.1s, background-color 0.2s;
 }
 
 .cell:hover:not(.disabled) {
     background-color: #2c3e50;
     transform: scale(1.05);
+    color: rgba(255, 255, 255, 0.7);
 }
 
 /* Cores Oficiais da Frota Revelada */
-.cell.ship-carrier { background-color: #e74c3c !important; }    /* Vermelho (4 blocos) */
-.cell.ship-battleship { background-color: #2ecc71 !important; } /* Verde (3 blocos) */
-.cell.ship-destroyer { background-color: #f1c40f !important; }  /* Amarelo (2 blocos) */
-.cell.ship-submarine { background-color: #9b59b6 !important; }  /* Roxo (2 blocos) */
-.cell.ship-patrol { background-color: #1abc9c !important; }     /* Ciano (1 bloco) */
+.cell.ship-carrier { background-color: #e74c3c !important; color: #ffffff !important; }
+.cell.ship-battleship { background-color: #2ecc71 !important; color: #ffffff !important; }
+.cell.ship-destroyer { background-color: #f1c40f !important; color: #000000 !important; }
+.cell.ship-submarine { background-color: #9b59b6 !important; color: #ffffff !important; }
+.cell.ship-patrol { background-color: #1abc9c !important; color: #000000 !important; }
 
-/* Estilo do Tiro na Água solicitado */
+/* Tiro na Água solicitado */
 .cell.water {
-    background-color: #add8e6 !important; /* Azul claro (LightBlue) */
-    background-image: none !important;    
-    cursor: not-allowed;                  
+    background-color: #add8e6 !important;
+    color: #2c3e50 !important;
 }
 
-/* Bordas indicando a conquista de cada jogador */
+/* Indicadores de Conquista por Jogador */
 .cell.claimed-p1 { border: 2px solid #3498db !important; }
 .cell.claimed-p2 { border: 2px solid #e67e22 !important; }
 .cell.disabled { cursor: not-allowed; pointer-events: none; }
 
-/* Modal */
-.modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; justify-content: center; align-items: center; z-index: 10; }
-.modal-content { background: #15222e; padding: 25px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; border: 1px solid #2c3e50; }
-#options-container { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-.option-btn { padding: 12px; background: #1f2f3d; color: white; border: 1px solid #2c3e50; border-radius: 6px; cursor: pointer; text-align: left; }
-.option-btn:hover { background: #2c3e50; }
-.hidden { display: none !important; }
-
-/* Botão de Reiniciar Incorporado */
+/* --- BOTÕES E COMPONENTES DE INTERFACE --- */
 .btn-reiniciar {
     background-color: #bdc3c7;
     color: #2c3e50;
     border: none;
     padding: 10px 20px;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     border-radius: 5px;
     cursor: pointer;
-    margin: 20px auto;
-    display: block;
+    margin-bottom: 10px;
     transition: background 0.3s, transform 0.1s;
 }
 
-.btn-reiniciar:hover {
-    background-color: #95a5a6;
-    color: white;
-}
+.btn-reiniciar:hover { background-color: #95a5a6; color: white; }
+.btn-reiniciar:active { transform: scale(0.98); }
 
-.btn-reiniciar:active {
-    transform: scale(0.98);
-}
-
-/* Estilo da caixa da legenda */
 .legenda-container {
     background: #15222e;
     border: 1px solid #2c3e50;
     border-radius: 8px;
-    padding: 15px;
-    margin: 20px auto;
-    max-width: 395px;
+    padding: 12px;
+    width: 100%;
+    max-width: 385px;
     text-align: left;
+    margin-top: 10px;
 }
 
 .legenda-container h3 {
-    font-size: 1rem;
+    font-size: 0.9rem;
     color: #6272a4;
-    margin-bottom: 10px;
+    margin-bottom: 8px;
     text-align: center;
 }
 
-/* Organização dos itens em duas colunas */
 .legenda-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
 }
 
 .legenda-item {
     display: flex;
     align-items: center;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #ffffff;
 }
 
-/* Quadradinhos coloridos da legenda utilizando suas cores oficiais */
 .cor-box {
-    width: 16px;
-    height: 16px;
-    border-radius: 4px;
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
     margin-right: 8px;
     display: inline-block;
     flex-shrink: 0;
@@ -171,3 +195,46 @@ body {
 .cor-box.roxo { background-color: #9b59b6; }
 .cor-box.ciano { background-color: #1abc9c; }
 .cor-box.azul-claro { background-color: #add8e6; }
+
+/* --- MODAL DO QUIZ --- */
+.modal { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+    height: 100%; 
+    background: rgba(0,0,0,0.85); 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    z-index: 10; 
+}
+
+.modal-content { 
+    background: #15222e; 
+    padding: 25px; 
+    border-radius: 12px; 
+    width: 90%; 
+    max-width: 400px; 
+    text-align: center; 
+    border: 1px solid #2c3e50; 
+}
+
+#turn-announcer { font-size: 1.3rem; margin-bottom: 10px; color: #fff; }
+#question-text { font-size: 1rem; color: #cbd5e0; margin-bottom: 15px; }
+#options-container { display: flex; flex-direction: column; gap: 10px; }
+
+.option-btn { 
+    padding: 12px; 
+    background: #1f2f3d; 
+    color: white; 
+    border: 1px solid #2c3e50; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    text-align: left; 
+    font-size: 0.9rem;
+    transition: background 0.2s;
+}
+
+.option-btn:hover { background: #2c3e50; }
+.hidden { display: none !important; }
