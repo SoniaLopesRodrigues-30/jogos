@@ -8,24 +8,22 @@
 </head>
 <body>
     <div class="game-container">
-        <h1>Batalha Naval Quiz 👥</h1>
+        <h1>Batalha do BEM 👥</h1>
         
         <!-- HUD contendo apenas as caixas de pontuação -->
         <div class="hud">
             <div class="player-info p1 active" id="p1-panel">
-                <h3>Jogador 1 (Azul)</h3>
+                <h3>O BEM (Azul)</h3>
                 <p>Pontos: <span id="p1-score">0</span> pts</p>
             </div>
             <div class="player-info p2" id="p2-panel">
-                <h3>Jogador 2 (Laranja)</h3>
+                <h3>MAL</h3>
                 <p>Pontos: <span id="p2-score">0</span> pts</p>
             </div>
         </div>
 
-        <button id="reset-btn" class="btn-reiniciar" onclick="resetGame()">Reiniciar Jogo</button>
-        <!-- CORRIGIDO: Removemos os blocos rígidos de coordenadas manuais do HTML -->
-        <div class="board-wrapper">
-            <!-- Deixamos apenas a div do grid vazia para o JS preencher perfeitamente -->
+        <button id="reset-btn" class="btn-reiniciar" onclick="resetGame()">Reiniciar Jogo</button>        
+        <div class="board-wrapper">            
             <div id="grid"></div>
         </div>
 
@@ -33,12 +31,13 @@
         <div class="legenda-container">
             <h3>Identificação dos Alvos</h3>
             <div class="legenda-grid">
-                <div class="legenda-item"><span class="cor-box vermelho"></span> Porta-Aviões (4 blocos)</div>
-                <div class="legenda-item"><span class="cor-box verde"></span> Encouraçado (3 blocos)</div>
-                <div class="legenda-item"><span class="cor-box amarelo"></span> Contratorpedeiro (2 blocos)</div>
-                <div class="legenda-item"><span class="cor-box roxo"></span> Submarino (2 blocos)</div>
-                <div class="legenda-item"><span class="cor-box ciano"></span> Navio de Patrulha (1 bloco)</div>
+                <div class="legenda-item"><span class="cor-box vermelho"></span> LIVRO DOS ESPÍRITOS (4 blocos)</div>
+                <div class="legenda-item"><span class="cor-box verde"></span> O EVANGELHO SEGUNDO O ESPIRITISMO (3 blocos)</div>
+                <div class="legenda-item"><span class="cor-box amarelo"></span> O LIVRO DOS MÉDIUNS (2 blocos)</div>
+                <div class="legenda-item"><span class="cor-box roxo"></span> A GÊNESE (2 blocos)</div>
+                <div class="legenda-item"><span class="cor-box ciano"></span> O CÉU E O INFERNO (1 bloco)</div>
                 <div class="legenda-item"><span class="cor-box azul-claro"></span> Água / Erro</div>
+                <div class="legenda-item"><span class="cor-box" style="background-color: #7f8c8d;"></span> Almas Pedras (Obstáculo)</div>
             </div>
         </div>
     </div>

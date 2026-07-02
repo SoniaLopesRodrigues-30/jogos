@@ -238,3 +238,13 @@ h1 {
 
 .option-btn:hover { background: #2c3e50; }
 .hidden { display: none !important; }
+
+/* Estilo visual para as Almas Pedras quando reveladas */
+.cell.claimed-p2[data-row="1"][data-col="5"],
+.cell.claimed-p2[data-row="3"][data-col="0"],
+.cell.claimed-p2[data-row="4"][data-col="5"],
+.cell.claimed-p2[data-row="5"][data-col="1"] {
+    background-color: #7f8c8d !important; /* Cor cinza de pedra */
+    color: #ffffff !important;
+}
+

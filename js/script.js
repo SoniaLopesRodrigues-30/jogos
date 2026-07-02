@@ -1,34 +1,34 @@
-// --- PARTE 1: ESCOPO GLOBAL E CONFIGURAÇÕES ---
+// --- PARTE 1: ESCOPO GLOBAL, CONFIGURAÇÕES E BANCO DE PERGUNTAS (1/2) ---
 const columnsLetters = ["A", "B", "C", "D", "E", "F"];
 const totalShipSquares = 12;
 
-// Tabela de pontos por tipo de navio encontrado
+// Tabela de pontos por tipo de alvo (Adicionado as Pedras)
 const pointsTable = {
-    carrier: 50,     // Porta-Aviões (Mais valioso)
+    carrier: 50,     // Porta-Aviões
     battleship: 40,  // Encouraçado
     destroyer: 30,   // Contratorpedeiro
     submarine: 30,   // Submarino
     patrol: 20,      // Navio de Patrulha
-    water: 10        // Acertou a pergunta mas pegou água
+    rock: 20,        // NOVO: Almas Pedras (Pontos grátis para o MAL)
+    water: 10        // Água
 };
 
-// Controle de estado do jogo
+// Controle de estado do jogo (O BEM contra o placar do MAL)
 let discoveredShipSquares = 0; 
-let currentPlayer = 1;
-let p1Score = 0; 
-let p2Score = 0; 
+let p1Score = 0; // Pontos do BEM
+let p2Score = 0; // Pontos do MAL
 let currentCell = null;
 let currentQuestion = null;
 let perguntasSorteadas = [];
 
-// Mapa 6x6 totalmente preenchido com 6 colunas em todas as linhas
+// Mapa 6x6 totalmente preenchido (Adicionado 4 Almas Pedras estratégicas)
 const shipMap = [
     ['carrier', 'carrier', 'carrier', 'carrier', 0, 0],
-    [0, 'battleship', 'battleship', 'battleship', 0, 0],
+    [0, 'battleship', 'battleship', 'battleship', 0, 'rock'], // Pedra em F2
     [0, 0, 'destroyer', 'destroyer', 0, 0],
-    [0, 0, 0, 'submarine', 'submarine', 0],
-    [0, 0, 0, 0, 'patrol', 0],
-    [0, 0, 0, 0, 0, 0]
+    ['rock', 0, 0, 'submarine', 'submarine', 0],             // Pedra em A4
+    [0, 0, 0, 0, 'patrol', 'rock'],                           // Pedra em F5
+    [0, 'rock', 0, 0, 0, 0]                                    // Pedra em B6
 ];
 
 // Elementos do DOM
@@ -45,7 +45,7 @@ const perguntasEspiritismo = [
     { q: "Qual era o nome real de Allan Kardec?", options: ["Hippolyte Léon Denizard Rivail", "Léon Denis", "Gabriel Delanne", "Amélie Boudet"], answer: 0 },
     { q: "Quantas obras principais formam a Codificação Espírita?", options: ["3 obras", "4 obras", "5 obras", "6 obras"], answer: 2 },
     { q: "Qual livro da codificação explica as leis morais e a vida espiritual?", options: ["O Livro dos Espíritos", "O Livro dos Médiuns", "O Céu e o Inferno", "A Gênese"], answer: 0 },
-    { q: "Qual obra aborda a mediunidade e a comunicação com o world invisível?", options: ["O Evangelho segundo o Espiritismo", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
+    { q: "Qual obra aborda a mediunidade e a comunicação com o mundo invisível?", options: ["O Evangelho segundo o Espiritismo", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
     { q: "Segundo o Espiritismo, qual é o objetivo principal da reencarnação?", options: ["Punição eterna", "Evolução moral e intelectual", "Esquecer o passado", "Apenas viver na Terra"], answer: 1 },
     { q: "Qual livro aborda a justiça divina, as penas e os gozos futuros?", options: ["O Livro dos Espíritos", "A Gênese", "O Céu e o Inferno", "O Livro dos Médiuns"], answer: 2 },
     { q: "Qual é o nome do laço fluídico que une o corpo físico ao perispírito?", options: ["Cordão de prata", "Fluido vital", "Duplo etérico", "Laço magnético"], answer: 0 },
@@ -54,14 +54,17 @@ const perguntasEspiritismo = [
     { q: "Qual o nome do princípio universal do qual derivam todas as formas de matéria no universo?", options: ["Fluido Cósmico Universal", "Energia Escura", "Matéria Ectoplásmica", "Fluido Espiritual"], answer: 0 },
     { q: "Qual é o nome do envoltório semimaterial que serve de ligação entre o Espírito e o corpo?", options: ["Corpo Astral", "Perispírito", "Alma", "Duplo Vital"], answer: 1 },
     { q: "Como o Espiritismo define a situação da alma após a morte do corpo?", options: ["Adormece até o juízo final", "Mantém sua individualidade e continua sua evolução", "Funde-se imediatamente com o Absoluto", "Deixa de existir"], answer: 1 },
-    { q: "De acordo com as Leis Morais, qual é o principal objetivo da Lei de Sociedade?", options: ["Permitir o progresso mútuo através da convivência", "Garantir a sobrevivência dos mais fortes", "Criar divisões de classes sociais", "Impor regras de conduta severas"], answer: 0 },
+    { q: "De acordo com as Leis Morais, qual é o principal objetivo da Lei de Sociedade?", options: ["Permitir o progresso mútuo através da convivência", "Garantir a sobrevivência dos mais fortes", "Criar divisões de classes sociais", "Impor regras de conduta severas"], answer: 0 }
+];
+// --- PARTE 2: CONTINUAÇÃO DO BANCO DE PERGUNTAS E CRIAÇÃO DO TABULEIRO ---
+perguntasEspiritismo.push(
     { q: "O que significa o termo 'Erraticidade' na Doutrina Espírita?", options: ["O estado de erro constante do ser humano", "O intervalo entre duas encarnações corporais", "A perda completa da memória de vidas passadas", "O ato de cometer faltas graves"], answer: 1 },
     { q: "Qual é a tríplice herança ou o tríplice aspecto em que o Espiritismo se baseia?", options: ["Religião, Dogma e Ritual", "Ciência, Filosofia e Religião", "Misticismo, Ocultismo e Ciência", "Filosofia, Política e Arte"], answer: 1 },
     { q: "O que determina a rapidez da evolução de um Espírito?", options: ["A vontade divina e o destino", "O tempo absoluto de sua criação", "Seus próprios esforços e livre-arbítrio", "O número exato de reencarnações"], answer: 2 },
     { q: "Na escala espírita, quais são as três ordens principais de Espíritos?", options: ["Anjos, Demônios e Humanos", "Imperfeitos, Bons Espíritos e Puros Espíritos", "Terrenos, Astrais e Divinos", "Evoluídos, Estagnados e Regressivos"], answer: 1 },
     { q: "Qual livro da Codificação analisa os milagres e as predições segundo as leis da natureza?", options: ["O Livro dos Espíritos", "O Evangelho segundo o Espiritismo", "A Gênese", "O Céu e o Inferno"], answer: 2 },
     { q: "Onde começaram as manifestações que deram origem às investigações de Kardec?", options: ["Nas mesas girantes em Paris", "Em reuniões mediúnicas no Brasil", "Em monastérios no Tibete", "Em templos religiosos na Inglaterra"], answer: 0 },
-    { q: "Quem foi a fiel esposa e colaboradora direta de Allan Kardec?", options: ["Amélie-Gabrielle Boudet", "Marie Curie", "Hermance Dufaux", "Delphine de Girardin"], answer: 0 },
+    { q: "Quem foi a fiel esposa e colaboradora direta di Allan Kardec?", options: ["Amélie-Gabrielle Boudet", "Marie Curie", "Hermance Dufaux", "Delphine de Girardin"], answer: 0 },
     { q: "Quem escreveu o clássico livro 'Depois da Morte', sendo considerado o consolidador do Espiritismo?", options: ["Chico Xavier", "Léon Denis", "Gabriel Delanne", "Camille Flammarion"], answer: 1 },
     { q: "Qual o nome da revista mensal fundada e editada por Allan Kardec a partir de 1858?", options: ["Revista de Estudos Psíquicos", "O Clarim Espírita", "Revista Espírita", "O Reformador"], answer: 2 },
     { q: "O que é o passe na prática espírita?", options: ["Uma transfusão de fluidos e energias espirituais", "Um ritual de purificação com água benta", "Um exame para testar a mediunidade", "Uma prece silenciosa individual"], answer: 0 },
@@ -71,8 +74,8 @@ const perguntasEspiritismo = [
     { q: "Qual livro da Codificação Espírita é considerado o guia teórico e prático da mediunidade?", options: ["O Livro dos Espíritos", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
     { q: "Como o Espiritismo define a mediunidade?", options: ["Um dom sobrenatural e milagroso", "Uma faculdade orgânica e natural do ser humano", "Um privilégio concedido apenas a santos", "Uma doença psicológica grave"], answer: 1 },
     { q: "Qual o nome dado ao médium que serve de canal para que os espíritos escrevam?", options: ["Médium de efeitos físicos", "Médium psicógrafo", "Médium audiente", "Médium vidente"], answer: 1 }
-];
-// --- PARTE 2: LÓGICA DE EXECUÇÃO E REGRAS ---
+);
+
 function generateDynamicQuestion() {
     if (perguntasSorteadas.length === perguntasEspiritismo.length) {
         perguntasSorteadas = [];
@@ -95,13 +98,11 @@ function generateDynamicQuestion() {
     return { q: perguntaEscolhida.q, options: apenasTextos, answer: novoIndiceCorreto };
 }
 
-// CORRIGIDO: Esta função monta as letras, números e blocos do mar integrados ao novo CSS
 function createGameBoard() {
     const grid = document.getElementById('grid');
     if (!grid) return;
     grid.innerHTML = ''; 
 
-    // Cria a linha superior de coordenadas (Canto vazio + Letras A-F)
     const emptyCorner = document.createElement('div');
     emptyCorner.classList.add('coord-label');
     grid.appendChild(emptyCorner);
@@ -113,7 +114,6 @@ function createGameBoard() {
         grid.appendChild(label);
     });
 
-    // Cria as linhas seguintes (Número indicador na esquerda + 6 células jogáveis)
     for (let r = 0; r < 6; r++) {
         const rowLabel = document.createElement('div');
         rowLabel.classList.add('coord-label');
@@ -131,6 +131,17 @@ function createGameBoard() {
             
             cell.addEventListener('click', () => {
                 if (cell.classList.contains('disabled')) return;
+                
+                // MUDANÇA AQUI: Detecta se bateu em uma Alma Pedra antes de abrir o quiz
+                const targetType = shipMap[r][c];
+                if (targetType === 'rock') {
+                    cell.classList.add('disabled', 'claimed-p2'); // Borda do MAL
+                    p2Score += pointsTable.rock; // Pontos automáticos pro MAL
+                    document.getElementById('p2-score').textContent = p2Score;
+                    alert(`🪨 Coordenada [${coordLabel}]: Você atingiu uma Alma Petrificada! Ponto automático gratuito para o MAL (+${pointsTable.rock} pts)!`);
+                    return; // Encerra a jogada sem abrir o quiz
+                }
+
                 currentCell = cell;
                 openQuiz(coordLabel);
             });
@@ -139,14 +150,14 @@ function createGameBoard() {
         }
     }
 }
-
+// --- PARTE 3: LÓGICA DO QUIZ E ATRIBUÇÃO DIRETA DE PONTOS ---
 function openQuiz(coordinate) {
     currentQuestion = generateDynamicQuestion();
     
     const announcerInsideModal = document.getElementById('turn-announcer');
     if (announcerInsideModal) {
-        announcerInsideModal.textContent = `Vez do Jogador ${currentPlayer}`;
-        announcerInsideModal.style.color = currentPlayer === 1 ? '#3498db' : '#e67e22';
+        announcerInsideModal.textContent = `Desafio do Oceano`;
+        announcerInsideModal.style.color = '#3498db';
     }
 
     questionText.innerHTML = `<span style="color: #6272a4;">Disparo na Coordenada [${coordinate}]</span><br><br>${currentQuestion.q}`;
@@ -171,36 +182,42 @@ function checkAnswer(selected, correct) {
     const shipType = shipMap[row][col];
 
     currentCell.classList.add('disabled');
-    currentCell.classList.add(`claimed-p${currentPlayer}`);
 
-    let pointsGained = 0;
+    let pointsGained = shipType !== 0 ? pointsTable[shipType] : pointsTable.water;
 
     if (selected === correct) {
+        // Se ACERTOU: Os pontos vão para o BEM
+        p1Score += pointsGained;
+        currentCell.classList.add('claimed-p1'); // Borda Azul do Bem
+
         if (shipType !== 0) {
-            pointsGained = pointsTable[shipType];
-            alert(`Boa! Resposta CORRETA. Você atingiu um ${translateShip(shipType)} (+${pointsGained} pts)!`);
+            alert(`Boa! Resposta CORRETA. Você purificou um ${translateShip(shipType)} (+${pointsGained} pts para o BEM)!`);
             currentCell.classList.add(`ship-${shipType}`);
             discoveredShipSquares++;
         } else {
-            pointsGained = pointsTable.water;
-            alert(`Resposta CORRETA, mas o tiro deu na água (+${pointsGained} pts).`);
+            alert(`Resposta CORRETA, mas o tiro deu na água (+${pointsGained} pts para o BEM).`);
             currentCell.classList.add('water');
         }
     } else {
-        alert("Resposta INCORRETA! O disparo falhou e você somou 0 pontos.");
-        currentCell.classList.add('water');
+        // Se ERROU: O MAL ganha os pontos
+        p2Score += pointsGained;
+        currentCell.classList.add('claimed-p2'); // Borda Laranja do Mal
+
+        if (shipType !== 0) {
+            alert(`Resposta INCORRETA! O disparo falhou. As forças do MAL capturaram o ${translateShip(shipType)} (+${pointsGained} pts para o MAL)!`);
+            currentCell.classList.add(`ship-${shipType}`);
+            discoveredShipSquares++;
+        } else {
+            alert(`Resposta INCORRETA! O disparo falhou. As forças do MAL pontuaram na Água (+${pointsGained} pts para o MAL)!`);
+            currentCell.classList.add('water');
+        }
     }
 
-    if (currentPlayer === 1) {
-        p1Score += pointsGained;
-        document.getElementById('p1-score').textContent = p1Score;
-    } else {
-        p2Score += pointsGained;
-        document.getElementById('p2-score').textContent = p2Score;
-    }
+    // Atualiza os placares visuais na tela
+    document.getElementById('p1-score').textContent = p1Score;
+    document.getElementById('p2-score').textContent = p2Score;
 
     checkGameEnd();
-    switchPlayer();
 }
 
 function translateShip(type) {
@@ -208,29 +225,19 @@ function translateShip(type) {
     return names[type] || "Navio";
 }
 
-function switchPlayer() {
-    currentPlayer = currentPlayer === 1 ? 2 : 1;
-    const p1Panel = document.getElementById('p1-panel');
-    const p2Panel = document.getElementById('p2-panel');
-    if (p1Panel && p2Panel) {
-        p1Panel.classList.toggle('active');
-        p2Panel.classList.toggle('active');
-    }
-}
-
 function checkGameEnd() {
     if (discoveredShipSquares === totalShipSquares) {
         let winnerText = "";
         if (p1Score > p2Score) {
-            winnerText = "🏆 Fim da Batalha!\n\nO Jogador 1 (Azul) venceu pelo total de pontos!";
+            winnerText = "🏆 Vitória Gloriosa!\n\nAs forças do BEM triunfaram sobre o MAL!";
         } else if (p2Score > p1Score) {
-            winnerText = "🏆 Fim da Batalha!\n\nO Jogador 2 (Laranja) venceu pelo total de pontos!";
+            winnerText = "🔥 O MAL Venceu...\n\nAs forças da escuridão somaram mais pontos!";
         } else {
-            winnerText = "🤝 Empate surpreendente no oceano!";
+            winnerText = "🤝 Um equilíbrio perfeito! Houve um empate técnico!";
         }
 
         setTimeout(() => {
-            alert(`${winnerText}\n\nPlacar Final:\nJogador 1: ${p1Score} pontos\nJogador 2: ${p2Score} pontos`);
+            alert(`${winnerText}\n\nPlacar Final:\nO BEM: ${p1Score} pontos\nO MAL: ${p2Score} pontos`);
             resetGame(); 
         }, 500);
     }
@@ -240,7 +247,6 @@ function resetGame() {
     discoveredShipSquares = 0;
     p1Score = 0;
     p2Score = 0;
-    currentPlayer = 1;
     perguntasSorteadas = []; 
     currentCell = null;
     currentQuestion = null;
@@ -256,9 +262,9 @@ function resetGame() {
     }
 
     modal.classList.add('hidden');
-    alert("O oceano foi redefinido! Nova partida iniciada.");
+    alert("O oceano foi redefinido! Nova jornada contra o MAL iniciada.");
     createGameBoard();
 }
 
-// Inicializa a montagem correta do tabuleiro integrado ao carregar o script
+// Inicializa o tabuleiro
 createGameBoard();
