@@ -26,10 +26,10 @@ const QUANTIDADE_PEDRAS = 2;
 let shipMap = Array(7).fill(0).map(() => Array(7).fill(0));
 
 const perguntasEspiritismo = [
-    { q: "Quem foi o codificador da Doutrina Espírita?", options: ["Chico Xavier", "Allan Kardec", "Léon Denis", "Emmanuel"], answer: 1 },
-    { q: "Qual foi a primeira obra da Codificação Espírita, lançada em 1857?", options: ["O Livro dos Médiuns", "O Evangelho segundo o Espiritismo", "O Livro dos Espíritos", "A Gênese"], answer: 2 },
-    { q: "Qual era o nome real de Allan Kardec?", options: ["Hippolyte Léon Denizard Rivail", "Léon Denis", "Gabriel Delanne", "Amélie Boudet"], answer: 0 },
-    { q: "Quantas obras principais formam a Codificação Espírita?", options: ["3 obras", "4 obras", "5 obras", "6 obras"], answer: 2 },
+    { q: "Qual é o nome da mediunidade, no qual o médium sente a presença de espíritos?", options: ["Mediunidade psicofônica", "Mediunidade sensitiva", "Mediunidade psicográfica", "Mediunidade de vidência."], answer: 1 },
+    { q: "Qual é o nome da mediunidade, no qual o espírito atua sobre a mão do médium para escrever?", options: ["Mediunidade Sonambúlica.", "Mediunidade de tiptografia.", "Mediunidade de psicografia.","Mediunidade de vidência."], answer: 2 },
+    { q: "Qual o nome da mediunidade, no qual espírito atua sobre as cordas vocais do médium para falar?", options: ["Mediunidade de psicofonia.", "Mediunidade de Paleontologia", "Mediunidade sensitiva", "Mediunidade de vidência."], answer: 0 },
+    { q: "Qual é o nome da mediunidade, no qual o médium vê os espíritos?", options: ["Mediunidade de audiência.", "Mediunidade de tato.", "Mediunidade onírica.","Mediunidade de vidência."], answer: 3 },
     { q: "Qual livro da codificação explica as leis morais e a vida espiritual?", options: ["O Livro dos Espíritos", "O Livro dos Médiuns", "O Céu e o Inferno", "A Gênese"], answer: 0 },
     { q: "Qual obra aborda a mediunidade e a comunicação com o mundo invisível?", options: ["O Evangelho segundo o Espiritismo", "O Livro dos Médiuns", "A Gênese", "O Céu e o Inferno"], answer: 1 },
     { q: "Segundo o Espiritismo, qual é o objetivo principal da reencarnação?", options: ["Punição eterna", "Evolução moral e intelectual", "Esquecer o passado", "Apenas viver na Terra"], answer: 1 },
@@ -40,12 +40,21 @@ const perguntasEspiritismo = [
     { q: "Qual é o nome do envoltório semimaterial que serve de ligação entre o Espírito e o corpo?", options: ["Corpo Astral", "Perispírito", "Alma", "Duplo Vital"], answer: 1 },
     { q: "Como o Espiritismo define a situação da alma após a morte do corpo?", options: ["Adormece até o juízo final", "Mantém sua individualidade e continua sua evolução", "Funde-se imediatamente com o Absoluto", "Deixa de existir"], answer: 1 }
 ];
+
 perguntasEspiritismo.push(
-    { q: "De acordo com as Leis Morais, qual é o principal objetivo da Lei de Sociedade?", options: ["Permitir o progresso mútuo através da convivência", "Garantir a sobrevivência dos mais fortes", "Criar divisões de classes sociais", "Impor regras de conduta severas"], answer: 0 },
-    { q: "O que significa o termo 'Erraticidade' na Doutrina Espírita?", options: ["O estado de erro constante do ser humano", "O intervalo entre duas encarnações corporais", "A perda completa da memória de vidas passadas", "O ato de cometer faltas graves"], answer: 1 },
-    { q: "Qual é a tríplice herança ou o tríplice aspecto em que o Espiritismo se baseia?", options: ["Religião, Dogma e Ritual", "Ciência, Filosofia e Religião", "Misticismo, Ocultismo e Ciência", "Filosofia, Política e Arte"], answer: 1 },
-    { q: "O que determina a rapidez da evolução de um Espírito?", options: ["A vontade divina e o destino", "O tempo absoluto de sua criação", "Seus próprios esforços e livre-arbítrio", "O número exato de reencarnações"], answer: 2 },
-    { q: "Na escala espírita, quais são as três ordens principais de Espíritos?", options: ["Anjos, Demônios e Humanos", "Imperfeitos, Bons Espíritos e Puros Espíritos", "Terrenos, Astrais e Divinos", "Evoluídos, Estagnados e Regressivos"], answer: 1 },
+    { q: "Segundo 'O Livro dos Médiuns', qual é o nome dado aos médiuns que ouvem a voz dos Espíritos?", options: ["Médiuns videntes",  "Médiuns psicofônicos", "Médiuns pneumatógrafos","Médiuns audientes"], answer: 3 },
+    { q: "Qual o nome do fluido animalizado, próprio do corpo físico, que o médium de efeitos físicos doa para a ocorrência de fenômenos materiais?", options: ["Fluido Cósmico Universal", "Ectoplasma", "Perispírito", "Fluido Vital Puro"], answer: 1 },
+    { q: "Como Kardec classifica o grau mais grave de obsessão, onde há o constrangimento físico e a paralisia da vontade do médium?", options: ["Obsessão simples", "Fascinação",  "Possessão material","Subjugação"], answer: 3 },
+    { q: "O que caracteriza o fenômeno da 'psicofonia' na prática mediúnica?", options: ["A transmissão do pensamento do Espírito através da fala do médium", "A escrita direta dos Espíritos sem o uso da mão do médium", "A aparição visual de um Espírito materializado", "O som de pancadas e ruídos nas paredes"], answer: 0 },
+    { q: "De acordo com a Doutrina Espírita, qual é o principal objetivo do desenvolvimento da mediunidade no ser humano?", options: ["Obter vantagens financeiras e materiais", "Prever o futuro e adivinhar a sorte das pessoas","Alcançar a fama e o reconhecimento social", "Servir de instrumento para o progresso moral e auxílio ao próximo" ], answer: 3 }
+);
+
+perguntasEspiritismo.push(
+    { q: "Qual o nome da mediunidade, no qual os espíritos movimentam objetos através dos fluídos do médium e do fluido universal?", options: ["Mediunidade de efeitos paranormais.", "Mediunidade de efeitos intelectuais.", "Mediunidade de efeitos morais.", "Mediunidade de efeitos físicos."], answer: 3 },
+    { q: "Qual é o nome da mediunidade, no qual o médium transmite energias espirituais coradoras por influência de um espírito?", options: ["Mediunidade de transmissão", "Mediunidade de cura.", "Mediunidade de luz.", "Mediunidade de paz."], answer: 1 },
+    { q: "Qual é o nome da mediunidade, no qual o médium possui uma vaga intuição de coisas futuras que vão ocorrer?", options: ["Mediunidade de pressentimento.", "Mediunidade de cognição.", "Mediunidade de invenção.", "Mediunidade de previsão."], answer: 0 },
+    { q: "Variedade rara de médiuns, no qual o médium escreve ou fala em línguas que lhe são estranhas?", options: ["Médiuns poliglotas.", "Médiuns inteligentes", "Médiuns extrovertidos", "Médiuns altruistas"], answer: 0 },
+    { q: "Qual é o nome da mediunidade, no qual o médium pode transmitir seu próprio pensamento na emancipação da sua alma?", options: ["Mediunidade sonhadora.", "Mediunidade incompleta.", "Mediunidade terciãria.", "Mediunidade sonambúlica."], answer: 3 },
     { q: "Qual livro da Codificação analisa os milagres e as predições segundo as leis da natureza?", options: ["O Livro dos Espíritos", "O Evangelho segundo o Espiritismo", "A Gênese", "O Céu e o Inferno"], answer: 2 },
     { q: "Onde começaram as manifestações que deram origem às investigações de Kardec?", options: ["Nas mesas girantes em Paris", "Em reuniões mediúnicas no Brasil", "Em monastérios no Tibete", "Em templos religiosos na Inglaterra"], answer: 0 },
     { q: "Quem foi a fiel esposa e colaboradora direta de Allan Kardec?", options: ["Amélie-Gabrielle Boudet", "Marie Curie", "Hermance Dufaux", "Delphine de Girardin"], answer: 0 },
